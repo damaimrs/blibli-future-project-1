@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <title>Manager - Purchase Paid</title>
+        <link type="text/css" rel="stylesheet" href="/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css"/>
+        <link type="text/css" rel="stylesheet" href="/webjars/bootstrap/3.3.7-1/css/bootstrap-theme.min.css"/>
+        <link type="text/css" rel="stylesheet" href="/css/dashboard.css"/>
+    </head>
+    <body>
+        <input id="user-id" th:value="${userId}" hidden="hidden" />
+
+        <div class="navbar">
+            <div class="container-fluid">
+                <ul class="nav navbar-nav navbar-right">
+                    <li id="logout" onclick="logout()" onmouseover="changeCursor(this)">
+                        <a style="color: #000;"><span class="glyphicon glyphicon-log-out"></span> Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <div class="row" id="sidebarNew">
+                <div class="col-sm-2">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/manager"><strong>Dashboard</strong></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/manager/menu"><strong>Menu</strong></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/manager/menu-category"><strong>Kategori Menu</strong></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/manager/purchase-paid"><strong>Histori Pembelian</strong></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/manager/product-sold"><strong>Product Terjual</strong></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/manager/profile"><strong>Edit Profil</strong></a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="col-sm-10" id="content">
+                    <div class="row" style="display: inline">
+                        <div class="col-sm-5">
+                            <h3>Pembelian</h3>
+                        </div>
+
+                        <div class="col-sm-7">
+                            <!--form untuk input tanggal mulai, ke js fungsi onStartDateChanged-->
+                            <div class="mr-sm-2 form-group">
+                                <label for="start-date">Tanggal mulai (bulan/hari/tahun) : </label>
+
+                                <div class="input-group">
+                                    <input id="start-date" class="form-control" type="date" placeholder="Tanggal mulai..." aria-label="Search" onchange="onStartDateChanged()"/>
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                </div>
+                            </div>
+                            <!--form untuk input tanggal selesai, ke js fungsi onEndDateChanged-->
+                            <div class="mr-sm-2 form-group">
+                                <label for="end-date">Tanggal akhir (bulan/hari/tahun) : </label>
+
+                                <div class="input-group">
+                                    <input id="end-date" class="form-control" type="date" placeholder="Tanggal akhir..." aria-label="Search" onchange="onEndDateChanged()"/>
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr/>
+
+                    <div class="col-sm-12 alert alert-success">
+                        Total pendapatan : Rp. <strong id="purchase-total-all"></strong>
+                    </div>
+
+                    <br/>
+
+                    <br/>
+
+                    <div class="col-sm-12 alert alert-info">
+                        Total pendapatan, mulai <small id="purchase-total-start-date"></small> sampai <small id="purchase-total-end-date"></small> : Rp. <strong id="purchase-total"></strong>
+                    </div>
+
+                    <br/>
+
+                    <table id="purchases-table" class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>
+                                <!--sorting berdasarkan tanggal-->
+                                <a id="purchases-table-purchase-date" onclick="changeSortDate()" onmouseover="changeCursor(this)">Tanggal</a>
+                                <img id="purchases-table-purchase-date-icon" src="/icon/sort-up.png" height="8" width="8" />
+                            </th>
+                            <th>
+                                <!--sorting berdasarkan meja-->
+                                <a id="purchases-table-purchase-table" onclick="changeSortTable()" onmouseover="changeCursor(this)">Meja</a>
+                                <img id="purchases-table-purchase-table-icon" src="/icon/sort-up.png" height="8" width="8" />
+                            </th>
+                            <th>
+                                <!--sorting berdasarkan waktu tunggu-->
+                                <a id="purchases-table-purchase-waiting-time" onclick="changeSortWaitingTime()" onmouseover="changeCursor(this)">Waktu Tunggu</a>
+                                <img id="purchases-table-purchase-waiting-time-icon" src="/icon/sort-up.png" height="8" width="8" />
+                            </th>
+                            <th>
+                                <!--sorting berdasarkan total harga-->
+                                <a id="purchases-table-purchase-total" onclick="changeSortTotal()" onmouseover="changeCursor(this)">Total</a>
+                                <img id="purchases-table-purchase-total-icon" src="/icon/sort-up.png" height="8" width="8" />
+                            </th>
+                            <th>
+                                <!--sorting berdasarkan kasir-->
+                                <a id="purchases-table-purchase-manager" onclick="changeSortCashier()" onmouseover="changeCursor(this)">Kasir</a>
+                                <img id="purchases-table-purchase-manager-icon" src="/icon/sort-up.png" height="8" width="8" />
+                            </th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody id="purchases-table-body">
+                        </tbody>
+                    </table>
+
+                    <br/>
+                    <!--pagination-->
+                    <div class="row" id="paging">
+                        <ul class="pagination">
+                            <li id="pagination-back" onclick="backPage()" onmouseover="changeCursor(this)">
+                                <a>Back</a>
+                            </li>
+                            <li id="pagination-page-li" onmouseover="changeCursor(this)" class="active">
+                                <a id="pagination-page">0</a>
+                            </li>
+                            <li>
+                                <a>-</a>
+                            </li>
+                            <li id="pagination-page-end-li" onclick="endPage()" onmouseover="changeCursor(this)">
+                                <a id="pagination-page-end">0</a>
+                            </li>
+                            <li id="pagination-next" onclick="nextPage()" onmouseover="changeCursor(this)">
+                                <a>Next</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript" src="/webjars/jquery/3.2.1/jquery.min.js"></script>
+        <script type="text/javascript" src="/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/js/manager/purchase-paid.js"></script>
+    </body>
+</html>

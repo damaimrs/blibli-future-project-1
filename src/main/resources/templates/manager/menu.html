@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <title>Manager - Menu</title>
+        <link type="text/css" rel="stylesheet" href="/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css"/>
+        <link type="text/css" rel="stylesheet" href="/webjars/bootstrap/3.3.7-1/css/bootstrap-theme.min.css"/>
+        <link type="text/css" rel="stylesheet" href="/css/dashboard.css"/>
+    </head>
+    <body>
+        <input id="user-id" th:value="${userId}" hidden="hidden" />
+
+        <div class="navbar">
+            <div class="container-fluid">
+                <ul class="nav navbar-nav navbar-right">
+                    <li id="logout" onclick="logout()" onmouseover="changeCursor(this)">
+                        <a style="color: #000;"><span class="glyphicon glyphicon-log-out"></span> Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <div class="row" id="sidebarNew">
+                <div class="col-sm-2">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/manager"><strong>Dashboard</strong></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/manager/menu"><strong>Menu</strong></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/manager/menu-category"><strong>Kategori Menu</strong></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/manager/purchase-paid"><strong>Histori Pembelian</strong></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/manager/product-sold"><strong>Product Terjual</strong></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/manager/profile"><strong>Edit Profil</strong></a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="col-sm-10" id="content">
+                    <div class="row" style="display: inline">
+                        <div class="col-sm-5">
+                            <h3>Menu</h3>
+                        </div>
+                        <div class="col-sm-2" style="padding-top: 2%">
+                            <!--untuk filter, ke fungsi changeFilterBy() di js-->
+                            <select class="form-control" id="menus-filter-by" onchange="changeFilterBy()">
+                            </select>
+                        </div>
+                        <div class="col-sm-5" style="padding-top: 2%">
+                            <!--untuk search, ke fungsi searchMenus() di js-->
+                            <form id="menus-search" class="form-inline" onsubmit="searchMenus()">
+                                <div class="input-group mr-sm-2">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+                                    <input id="menus-search-text" class="form-control" type="text" placeholder="Search..." aria-label="Search"/>
+                                </div>
+                                <button class="btn btn-primary my-2 my-sm-0" type="submit">Search</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <hr/>
+
+                    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#addModal">Add Menu</button>
+
+                    <!-- Add Modal -->
+                    <div class="modal fade" id="addModal" role="dialog">
+                        <div class="modal-dialog">
+
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h3 class="modal-title">Add Menu</h3>
+                                </div>
+                                <form id="menu-add-form" onsubmit="submitFormAdd()">
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <label for="menu-menu-category">Kategori menu : </label>
+                                            <select class="form-control" id="menu-menu-category" required="required">
+
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="menu-name">Nama : </label>
+                                            <input id="menu-name" placeholder="Masukkan nama menu.." class="form-control" required="required" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="menu-price">Harga (Rupiah) : </label>
+                                            <input id="menu-price" type="number" placeholder="Masukkan harga menu.." class="form-control" required="required" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="menu-status">Status : </label>
+                                            <select class="form-control" id="menu-status" required="required">
+                                                <option th:each="menuStatusVal : ${menuStatus}" th:value="${menuStatusVal}" th:text="${#strings.capitalize(menuStatusVal)}"></option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="menu-waiting-time">Waktu tunggu (Menit) : </label>
+                                            <input id="menu-waiting-time" type="number" placeholder="Masukkan waktu tunggu.." class="form-control" required="required" />
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button id="btn-add" type="submit" class="btn btn-info">Add</button>
+                                    </div>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <br/>
+                    <br/>
+
+                    <table id="menus-table" class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>
+                                <!--untuk sorting berdasarkan nama-->
+                                <a id="menus-table-menu-namee" onclick="changeSortName()" onmouseover="changeCursor(this)">Nama</a>
+                                <img id="menus-table-menu-name-icon" src="/icon/sort-up.png" height="8" width="8" />
+                            </th>
+                            <th>
+                                <!--untuk sorting berdasarkan kategori manu-->
+                                <a id="menus-table-menu-category" onclick="changeSortMenuCategory()" onmouseover="changeCursor(this)">Kategori Menu</a>
+                                <img id="menus-table-menu-category-icon" src="/icon/sort-up.png" height="8" width="8" />
+                            </th>
+                            <th>
+                                <!--untuk sorting berdasarkan harga-->
+                                <a id="menus-table-menu-price" onclick="changeSortPrice()" onmouseover="changeCursor(this)">Harga</a>
+                                <img id="menus-table-menu-price-icon" src="/icon/sort-up.png" height="8" width="8" />
+                            </th>
+                            <th>
+                                <!--untuk sorting berdasarkan waiting time-->
+                                <a id="menus-table-menu-waiting-time" onclick="changeSortWaitingTime()" onmouseover="changeCursor(this)">Waktu Tunggu</a>
+                                <img id="menus-table-menu-waiting-time-icon" src="/icon/sort-up.png" height="8" width="8" />
+                            </th>
+                            <th>
+                                <!--untuk sorting berdasarkan status menu-->
+                                <a id="menus-table-menu-status" onclick="changeSortStatus()" onmouseover="changeCursor(this)">Status</a>
+                                <img id="menus-table-menu-status-icon" src="/icon/sort-up.png" height="8" width="8" />
+                            </th>
+                            <th></th>
+                        </tr>
+                        </thead>
+
+                        <tbody id="menus-table-body">
+                        </tbody>
+                    </table>
+
+                    <div class="row" id="paging">
+                        <ul class="pagination">
+                            <li id="pagination-back" onclick="backPage()" onmouseover="changeCursor(this)">
+                                <a>Back</a>
+                            </li>
+                            <li id="pagination-page-li" onmouseover="changeCursor(this)" class="active">
+                                <a id="pagination-page">0</a>
+                            </li>
+                            <li>
+                                <a>-</a>
+                            </li>
+                            <li id="pagination-page-end-li" onclick="endPage()" onmouseover="changeCursor(this)">
+                                <a id="pagination-page-end">0</a>
+                            </li>
+                            <li id="pagination-next" onclick="nextPage()" onmouseover="changeCursor(this)">
+                                <a>Next</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript" src="/webjars/jquery/3.2.1/jquery.min.js"></script>
+        <script type="text/javascript" src="/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/js/manager/menu.js"></script>
+    </body>
+</html>

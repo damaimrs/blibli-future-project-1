@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <title>Manager - Product Sold</title>
+        <link type="text/css" rel="stylesheet" href="/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css"/>
+        <link type="text/css" rel="stylesheet" href="/webjars/bootstrap/3.3.7-1/css/bootstrap-theme.min.css"/>
+        <link type="text/css" rel="stylesheet" href="/css/dashboard.css"/>
+    </head>
+    <body>
+        <input id="user-id" th:value="${userId}" hidden="hidden" />
+
+        <select id="menu-status" hidden="hidden">
+            <option th:each="menuStatusVal : ${menuStatus}" th:value="${menuStatusVal}" th:text="${#strings.capitalize(menuStatusVal)}"></option>
+        </select>
+
+        <div class="navbar">
+            <div class="container-fluid">
+                <ul class="nav navbar-nav navbar-right">
+                    <li id="logout" onclick="logout()" onmouseover="changeCursor(this)">
+                        <a style="color: #000;"><span class="glyphicon glyphicon-log-out"></span> Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <div class="row" id="sidebarNew">
+                <div class="col-sm-2">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/manager"><strong>Dashboard</strong></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/manager/menu"><strong>Menu</strong></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/manager/menu-category"><strong>Kategori Menu</strong></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/manager/purchase-paid"><strong>Histori Pembelian</strong></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/manager/product-sold"><strong>Product Terjual</strong></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/manager/profile"><strong>Edit Profil</strong></a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="col-sm-10" id="content">
+                    <div class="row" style="display: inline">
+                        <div class="col-sm-5">
+                            <h3>Produk Terjual</h3>
+                        </div>
+                        <div class="col-sm-2" style="padding-top: 2%">
+                            <!--select button untuk filter, ke js fungsi changeFilterBy-->
+                            <select class="form-control" id="menus-filter-by" onchange="changeFilterBy()">
+                            </select>
+                        </div>
+                        <div class="col-sm-5" style="padding-top: 2%">
+                            <!--form untuk search, ke js fungsi searchMenus()-->
+                            <form id="menus-search" class="form-inline" onsubmit="searchMenus()">
+                                <div class="input-group mr-sm-2">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+                                    <input id="menus-search-text" class="form-control" type="text" placeholder="Search..." aria-label="Search"/>
+                                </div>
+                                <button class="btn btn-primary my-2 my-sm-0" type="submit">Search</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <hr/>
+
+                    <table id="menus-table" class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>
+                                <!--untuk sorting berdasarkan nama-->
+                                <a id="menus-table-menu-namee" onclick="changeSortName()" onmouseover="changeCursor(this)">Nama</a>
+                                <img id="menus-table-menu-name-icon" src="/icon/sort-up.png" height="8" width="8" />
+                            </th>
+                            <th>
+                                Kategori Menu
+                            </th>
+                            <th>
+                                <!--untuk sorting berdasarkan harga-->
+                                <a id="menus-table-menu-price" onclick="changeSortPrice()" onmouseover="changeCursor(this)">Harga</a>
+                                <img id="menus-table-menu-price-icon" src="/icon/sort-up.png" height="8" width="8" />
+                            </th>
+                            <th>
+                                <!--untuk sorting berdasarkan waiting time-->
+                                <a id="menus-table-menu-waiting-time" onclick="changeSortWaitingTime()" onmouseover="changeCursor(this)">Waktu Tunggu</a>
+                                <img id="menus-table-menu-waiting-time-icon" src="/icon/sort-up.png" height="8" width="8" />
+                            </th>
+                            <th>
+                                Jumlah Terjual
+                            </th>
+                            <th></th>
+                        </tr>
+                        </thead>
+
+                        <tbody id="menus-table-body">
+                        </tbody>
+                    </table>
+
+                    <div class="row" id="paging">
+                        <ul class="pagination">
+                            <li id="pagination-back" onclick="backPage()" onmouseover="changeCursor(this)">
+                                <a>Back</a>
+                            </li>
+                            <li id="pagination-page-li" onmouseover="changeCursor(this)" class="active">
+                                <a id="pagination-page">0</a>
+                            </li>
+                            <li>
+                                <a>-</a>
+                            </li>
+                            <li id="pagination-page-end-li" onclick="endPage()" onmouseover="changeCursor(this)">
+                                <a id="pagination-page-end">0</a>
+                            </li>
+                            <li id="pagination-next" onclick="nextPage()" onmouseover="changeCursor(this)">
+                                <a>Next</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript" src="/webjars/jquery/3.2.1/jquery.min.js"></script>
+        <script type="text/javascript" src="/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/js/manager/product-sold.js"></script>
+    </body>
+</html>

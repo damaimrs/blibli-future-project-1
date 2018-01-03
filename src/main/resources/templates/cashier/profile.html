@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <title>Cashier - Profile</title>
+        <link type="text/css" rel="stylesheet" href="/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css"/>
+        <link type="text/css" rel="stylesheet" href="/webjars/bootstrap/3.3.7-1/css/bootstrap-theme.min.css"/>
+        <link type="text/css" rel="stylesheet" href="/css/dashboard.css"/>
+    </head>
+    <body>
+        <input id="user-id" th:value="${userId}" hidden="hidden" />
+
+        <div class="navbar">
+            <div class="container-fluid">
+                <ul class="nav navbar-nav navbar-right">
+                    <li id="logout" onclick="logout()" onmouseover="changeCursor(this)">
+                        <a style="color: #000;"><span class="glyphicon glyphicon-log-out"></span> Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <div class="row" id="sidebarNew">
+                <div class="col-sm-2">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/cashier"><strong>Dashboard</strong></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/cashier/purchase-progress"><strong>Pemesanan</strong></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/cashier/purchase-paid"><strong>Histori Pembelian</strong></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/cashier/profile"><strong>Edit Profil</strong></a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="col-sm-10" id="content">
+                    <h3>Profile</h3>
+                    <h5 id="cashier-email"></h5>
+
+                    <hr/>
+
+                    <form id="user-edit-form" onsubmit="submitFormEdit()">
+                        <div class="form-group">
+                            <label for="user-name">Nama : </label>
+                            <input id="user-name" type="text" placeholder="Masukkan nama user.." class="form-control" required="required" />
+                        </div>
+                        <div class="form-group">
+                            <label for="user-email">Email : </label>
+                            <input id="user-email" type="email" placeholder="Masukkan email user.." class="form-control" required="required" />
+                        </div>
+                        <div class="form-group">
+                            <label for="user-password">Password : </label>
+                            <input id="user-password" type="password" placeholder="Masukkan password (jika ingin merubah password).." class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label for="user-phone">Nomor Telepon : </label>
+                            <input id="user-phone" type="text" placeholder="Masukkan nomor telepon user.." class="form-control" required="required" />
+                        </div>
+                        <div class="form-group">
+                            <label for="user-address">Alamat : </label>
+                            <input id="user-address" type="text" placeholder="Masukkan alamat user.." class="form-control" required="required" />
+                        </div>
+                        <div class="form-group">
+                            <label for="user-role">Role : </label>
+                            <input id="user-role" type="text" placeholder="Masukkan role.." class="form-control" required="required" disabled="disabled" />
+                        </div>
+                        <button id="btn-edit" type="submit" class="btn btn-info" style="float: right;">Edit</button>
+                    </form>
+
+                    <br/>
+                    <br/>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript" src="/webjars/jquery/3.2.1/jquery.min.js"></script>
+        <script type="text/javascript" src="/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/js/cashier/profile.js"></script>
+    </body>
+</html>

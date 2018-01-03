@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <title>Admin - Role</title>
+        <link type="text/css" rel="stylesheet" href="/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css"/>
+        <link type="text/css" rel="stylesheet" href="/webjars/bootstrap/3.3.7-1/css/bootstrap-theme.min.css"/>
+        <link type="text/css" rel="stylesheet" href="/css/dashboard.css"/>
+    </head>
+    <body>
+        <input id="user-id" th:value="${userId}" hidden="hidden" />
+
+        <div class="navbar">
+            <div class="container-fluid">
+                <ul class="nav navbar-nav navbar-right">
+                    <li id="logout" onclick="logout()" onmouseover="changeCursor(this)">
+                        <a style="color: #000;"><span class="glyphicon glyphicon-log-out"></span> Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+
+            <div class="row" id="sidebarNew">
+                <div class="col-sm-2">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/admin"><strong>Dashboard</strong></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admin/role"><strong>Role</strong></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admin/user"><strong>User</strong></a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="col-sm-10" id="content">
+                    <div class="row" style="display: inline">
+                        <div class="col-sm-5">
+                            <h3>Role</h3>
+                        </div>
+                        <div class="col-sm-7" style="padding-top: 2%">
+                            <!--form untuk search text apapun pada halaman role-->
+                            <form id="roles-search" class="form-inline" onsubmit="searchRoles()">
+                                <div class="input-group mr-sm-2" style="width: 70%;">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+                                    <!--text yang ada pada id ini akan dibuat key untuk melakukan search pada fungsi di js-->
+                                    <input id="roles-search-text" class="form-control" type="text" placeholder="Search..." aria-label="Search"/>
+                                </div>
+                                <button class="btn btn-primary my-2 my-sm-0" type="submit">Search</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <hr/>
+
+                    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#addModal">Add Role</button>
+
+                    <!-- Add Modal -->
+                    <div class="modal fade" id="addModal" role="dialog">
+                        <div class="modal-dialog">
+
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h3 class="modal-title">Add Role</h3>
+                                </div>
+                                <form id="role-add-form" onsubmit="submitFormAdd()">
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <label for="role-name">Nama Role : </label>
+                                            <input id="role-name" placeholder="Masukkan nama role.." class="form-control" required="required" />
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button id="btn-add" type="submit" class="btn btn-info">Add</button>
+                                    </div>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <br/>
+                    <br/>
+
+                    <table id="roles-table" class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>
+                                <a id="roles-table-role-name" onclick="changeSort()" onmouseover="changeCursor(this)">Role</a>
+                                <img id="roles-table-role-name-icon" src="/icon/sort-up.png" height="8" width="8" />
+                            </th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody id="roles-table-body">
+                        </tbody>
+                    </table>
+
+                    <br/>
+
+                    <div class="row" id="paging">
+                        <ul class="pagination">
+                            <li id="pagination-back" onclick="backPage()" onmouseover="changeCursor(this)">
+                                <a>Back</a>
+                            </li>
+                            <li id="pagination-page-li" onmouseover="changeCursor(this)" class="active">
+                                <a id="pagination-page">0</a>
+                            </li>
+                            <li>
+                                <a>-</a>
+                            </li>
+                            <li id="pagination-page-end-li" onclick="endPage()" onmouseover="changeCursor(this)">
+                                <a id="pagination-page-end">0</a>
+                            </li>
+                            <li id="pagination-next" onclick="nextPage()" onmouseover="changeCursor(this)">
+                                <a>Next</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript" src="/webjars/jquery/3.2.1/jquery.min.js"></script>
+        <script type="text/javascript" src="/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/js/admin/role.js"></script>
+    </body>
+</html>

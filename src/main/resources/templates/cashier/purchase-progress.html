@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <title>Cashier - Purchase Progress</title>
+        <link type="text/css" rel="stylesheet" href="/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css"/>
+        <link type="text/css" rel="stylesheet" href="/webjars/bootstrap/3.3.7-1/css/bootstrap-theme.min.css"/>
+        <link type="text/css" rel="stylesheet" href="/css/dashboard.css"/>
+    </head>
+    <body>
+        <input id="user-id" th:value="${userId}" hidden="hidden" />
+
+        <div class="navbar">
+            <div class="container-fluid">
+                <ul class="nav navbar-nav navbar-right">
+                    <li id="logout" onclick="logout()" onmouseover="changeCursor(this)">
+                        <a style="color: #000;"><span class="glyphicon glyphicon-log-out"></span> Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <div class="row" id="sidebarNew">
+                <div class="col-sm-2">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/cashier"><strong>Dashboard</strong></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/cashier/purchase-progress"><strong>Pemesanan</strong></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/cashier/purchase-paid"><strong>Histori Pembelian</strong></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/cashier/profile"><strong>Edit Profil</strong></a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="col-sm-10" id="content">
+                    <h3>Pemesanan</h3>
+
+                    <hr/>
+                    <!--button mengarah pada modal dengan id addModal di bawahnya-->
+                    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#addModal">Add Pemesanan</button>
+
+                    <!-- Add Modal -->
+                    <div class="modal" id="addModal" role="dialog">
+                        <div class="modal-dialog">
+
+                            <!-- Modal Add content-->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h3 class="modal-title">Add Pemesanan</h3>
+                                </div>
+                                <!--fungsi untuk submit form pada modal Add-->
+                                <form id="purchase-add-form" onsubmit="submitFormAdd()">
+                                    <div class="modal-body">
+                                        <!--insert nomor meja -->
+                                        <div class="form-group">
+                                            <label for="purchase-table">Nomor meja : </label>
+                                            <input id="purchase-table" type="number" placeholder="Masukkan nomor meja.." class="form-control" required="required" />
+                                        </div>
+
+                                        <hr />
+
+                                        <div class="form-group">
+                                            <!--untuk memilih kategori menu, menampilkan kategori menu yang tersedia ada pada fungsi getMenuCategories() di js-->
+                                            <label for="menu-menu-category">Kategori menu : </label>
+                                            <!--ada di js product-solds-->
+                                            <select class="form-control" id="menu-menu-category" onchange="getMenus()" required="required">
+
+                                            </select>
+                                        </div>
+                                        <!--tabel untuk menu yang tersedia berdasarkan kategori yang dipilih di atas, cara menampilkan ada di JS-->
+                                        <table id="menus-table" class="table table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Nama</th>
+                                                <th>Harga</th>
+                                                <th>Waktu Tunggu</th>
+                                                <th>Status</th>
+                                                <th></th>
+                                            </tr>
+                                            </thead>
+
+                                            <tbody id="menus-table-body">
+                                            </tbody>
+                                        </table>
+
+                                        <hr />
+                                        <!--tabel untuk menu yang telah ditambahkan pada pemesanan, untuk teknisnya cek JS purchase-progress-->
+                                        <table id="purchase-items-table" class="table table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Nama</th>
+                                                <th>Kategori Menu</th>
+                                                <th>Jumlah</th>
+                                                <th>Total Harga</th>
+                                                <th></th>
+                                            </tr>
+                                            </thead>
+
+                                            <tbody id="purchase-items-table-body">
+                                            </tbody>
+                                        </table>
+
+                                        <hr />
+                                        <!--total waiting time fungsi pada JS:calculateItemWaitingTime() -->
+                                        <div class="form-group">
+                                            <label for="purchase-waiting-time">Waktu tunggu (Menit) : </label>
+                                            <input id="purchase-waiting-time" type="number" class="form-control" value="0" disabled="disabled" required="required" />
+                                        </div>
+                                        <!--total harga fungsi di JS: calculatePurchaseItemTotalPrice() -->
+                                        <div class="form-group">
+                                            <label for="purchase-total">Total (Rupiah) : </label>
+                                            <input id="purchase-total" type="number" class="form-control" value="0" disabled="disabled" required="required" />
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <!--fungsi untuk add ada di tag form atas re:submitFormAdd-->
+                                        <button id="btn-add" type="submit" class="btn btn-info">Add</button>
+                                    </div>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <br/>
+                    <br/>
+                    <!--isi tabel cek js purchase-progress yang mengandung id = purchases-table (ada di fungsi getPurchase)-->
+                    <table id="purchases-table" class="table table-hover">
+                        <thead>
+                        <tr>
+                            <!--sorting ada di js purchase-progress nama fungsinya sesuai dengan isi onclick-->
+                            <th>No</th>
+                            <th>
+                                <a id="purchases-table-purchase-date" onclick="changeSortDate()" onmouseover="changeCursor(this)">Tanggal</a>
+                                <img id="purchases-table-purchase-date-icon" src="/icon/sort-up.png" height="8" width="8" />
+                            </th>
+                            <th>
+                                <a id="purchases-table-purchase-table" onclick="changeSortTable()" onmouseover="changeCursor(this)">Meja</a>
+                                <img id="purchases-table-purchase-table-icon" src="/icon/sort-up.png" height="8" width="8" />
+                            </th>
+                            <th>
+                                <a id="purchases-table-purchase-waiting-time" onclick="changeSortWaitingTime()" onmouseover="changeCursor(this)">Waktu Tunggu</a>
+                                <img id="purchases-table-purchase-waiting-time-icon" src="/icon/sort-up.png" height="8" width="8" />
+                            </th>
+                            <th>
+                                <a id="purchases-table-purchase-total" onclick="changeSortTotal()" onmouseover="changeCursor(this)">Total</a>
+                                <img id="purchases-table-purchase-total-icon" src="/icon/sort-up.png" height="8" width="8" />
+                            </th>
+                            <th>
+                                <a id="purchases-table-purchase-cashier" onclick="changeSortCashier()" onmouseover="changeCursor(this)">Kasir</a>
+                                <img id="purchases-table-purchase-cashier-icon" src="/icon/sort-up.png" height="8" width="8" />
+                            </th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody id="purchases-table-body">
+                        </tbody>
+                    </table>
+
+                    <br/>
+
+                    <div class="row" id="paging">
+                        <ul class="pagination">
+                            <li id="pagination-back" onclick="backPage()" onmouseover="changeCursor(this)">
+                                <a>Back</a>
+                            </li>
+                            <li id="pagination-page-li" onmouseover="changeCursor(this)" class="active">
+                                <a id="pagination-page">0</a>
+                            </li>
+                            <li>
+                                <a>-</a>
+                            </li>
+                            <li id="pagination-page-end-li" onclick="endPage()" onmouseover="changeCursor(this)">
+                                <a id="pagination-page-end">0</a>
+                            </li>
+                            <li id="pagination-next" onclick="nextPage()" onmouseover="changeCursor(this)">
+                                <a>Next</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript" src="/webjars/jquery/3.2.1/jquery.min.js"></script>
+        <script type="text/javascript" src="/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/js/cashier/purchase-progress.js"></script>
+    </body>
+</html>

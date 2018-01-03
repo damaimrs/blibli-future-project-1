@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <title>Admin</title>
+        <link type="text/css" rel="stylesheet" href="/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css"/>
+        <link type="text/css" rel="stylesheet" href="/webjars/bootstrap/3.3.7-1/css/bootstrap-theme.min.css"/>
+        <link type="text/css" rel="stylesheet" href="/css/dashboard.css"/>
+    </head>
+    <body>
+        <input id="user-id" th:value="${userId}" hidden="hidden" />
+
+        <div class="navbar">
+            <div class="container-fluid">
+                <ul class="nav navbar-nav navbar-right">
+                    <li id="logout" onclick="logout()" onmouseover="changeCursor(this)">
+                        <a style="color: #000;"><span class="glyphicon glyphicon-log-out"></span> Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <div class="row" id="sidebarNew">
+                <div class="col-sm-2">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/admin"><strong>Dashboard</strong></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admin/role"><strong>Role</strong></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admin/user"><strong>User</strong></a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-sm-10" id="content">
+                    <div class="col-sm-4">
+                        <div class="jumbotron jumbotron-fluid">
+                            <div class="container">
+                                <div id="loader-role-count"></div>
+                                <!--fungsi untuk menghitung role ada di js getRoleCount-->
+                                <h1 id="role-count" class="display-3" style="display: none">0</h1>
+                                <p class="lead">Role terdaftar</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="jumbotron jumbotron-fluid">
+                            <div class="container">
+                                <div id="loader-user-count"></div>
+                                <!--fungsi untuk menghitung jumlah user ada di js getUserCount-->
+                                <h1 id="user-count" class="display-3" style="display: none">0</h1>
+                                <p class="lead">User terdaftar</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <script type="text/javascript" src="/webjars/jquery/3.2.1/jquery.min.js"></script>
+        <script type="text/javascript" src="/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/js/admin/dashboard.js"></script>
+    </body>
+</html>

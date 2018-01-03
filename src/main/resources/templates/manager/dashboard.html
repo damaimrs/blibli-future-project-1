@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <title>Manager</title>
+        <link type="text/css" rel="stylesheet" href="/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css"/>
+        <link type="text/css" rel="stylesheet" href="/webjars/bootstrap/3.3.7-1/css/bootstrap-theme.min.css"/>
+        <link type="text/css" rel="stylesheet" href="/css/dashboard.css"/>
+    </head>
+    <body>
+        <input id="user-id" th:value="${userId}" hidden="hidden"/>
+
+        <div class="navbar">
+            <div class="container-fluid">
+                <ul class="nav navbar-nav navbar-right">
+                    <li id="logout" onclick="logout()" onmouseover="changeCursor(this)">
+                        <a style="color: #000;"><span class="glyphicon glyphicon-log-out"></span> Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <div class="row" id="sidebarNew">
+                <div class="col-sm-2">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/manager"><strong>Dashboard</strong></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/manager/menu"><strong>Menu</strong></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/manager/menu-category"><strong>Kategori Menu</strong></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/manager/purchase-paid"><strong>Histori Pembelian</strong></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/manager/product-sold"><strong>Product Terjual</strong></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/manager/profile"><strong>Edit Profil</strong></a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="col-sm-10" id="content">
+                    <div class="row" style="padding-left: 20px; padding-right: 20px;">
+                        <div class="col-sm-4">
+                            <div class="jumbotron jumbotron-fluid">
+                                <div class="container">
+                                    <div id="loader-menu-count"></div>
+                                    <h1 id="menu-count" class="display-3" style="display: none">0</h1>
+                                    <p class="lead">Menu terdaftar</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="jumbotron jumbotron-fluid">
+                                <div class="container">
+                                    <div id="loader-menu-category-count"></div>
+                                    <h1 id="menu-category-count" class="display-3" style="display: none">0</h1>
+                                    <p class="lead">Kategori Menu terdaftar</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="jumbotron jumbotron-fluid">
+                                <div class="container">
+                                    <div id="loader-purchase-paid-count"></div>
+                                    <h1 id="purchase-paid-count" class="display-3" style="display: none">0</h1>
+                                    <p class="lead">Pembelian</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="padding-left: 20px; padding-right: 20px;">
+                        <div class="col-sm-4">
+                            <div class="jumbotron jumbotron-fluid">
+                                <div class="container">
+                                    <div id="loader-purchase-total-count"></div>
+                                    <h1 id="purchase-total-count" class="display-3" style="display: none">0</h1>
+                                    <p class="lead">Pendapatan</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="jumbotron jumbotron-fluid">
+                                <div class="container">
+                                    <div id="loader-product-sold-count"></div>
+                                    <h1 id="product-sold-count" class="display-3" style="display: none">0</h1>
+                                    <p class="lead">Produk Terjual</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript" src="/webjars/jquery/3.2.1/jquery.min.js"></script>
+        <script type="text/javascript" src="/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/js/manager/dashboard.js"></script>
+    </body>
+</html>
